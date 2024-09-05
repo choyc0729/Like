@@ -5,41 +5,27 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Column;
 
 @Entity
-@Table(name = "user_like") // 테이블 이름
+@Table(name = "global_like")
 public class Like {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = true)
-    private String ipAddress; // IP 주소 저장
+    private Integer count;
 
-    private Integer count; // 좋아요 수
-
-    // 기본 생성자
     public Like() {
         this.count = 0;
     }
 
-    // Getter 및 Setter
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
     }
 
     public Integer getCount() {

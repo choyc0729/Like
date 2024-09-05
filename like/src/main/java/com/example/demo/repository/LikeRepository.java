@@ -4,5 +4,5 @@ import com.example.demo.model.Like;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
-    Like findByIpAddress(String ipAddress);
+    // IP 주소 기반 메서드 제거
 }

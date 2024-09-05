@@ -7,17 +7,18 @@
     <h1>Likes</h1>
     <p>Current Likes: <span th:text="${like != null ? like.count : 0}">0</span></p>
 
-    <div th:if="${like == null}">
-        <form action="/like" method="post">
-            <button type="submit">Like</button>
-        </form>
-    </div>
+	<div th:if="${!hasLiked}">
+	    <form action="/like" method="post">
+	        <button type="submit">Like</button>
+	    </form>
+	</div>
 
-    <div th:if="${like != null}">
-        <form action="/unlike" method="post">
-            <button type="submit">Unlike</button>
-        </form>
-    </div>
+	<div th:if="${hasLiked}">
+	    <form action="/unlike" method="post">
+	        <button type="submit">Unlike</button>
+	    </form>
+	</div>
+
 
     <div th:if="${error != null}">
         <p style="color: red;" th:text="${error}"></p>
