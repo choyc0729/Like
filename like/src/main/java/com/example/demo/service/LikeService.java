@@ -20,7 +20,7 @@ public class LikeService {
         if (like == null) {
             like = new Like();
             like.setIpAddress(ipAddress);
-            like.setCount(1); // 처음 좋아요를 누를 때 count를 1로 설정
+            like.setCount(1); // 처음 좋아요를 누를 때 count를 1로 설정.
             likeRepository.save(like);
         } else {
             throw new IllegalStateException("You have already liked this item.");
