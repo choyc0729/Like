@@ -11,3 +11,4 @@ public class LikeApplication {
     }
 }
 
+//Spring Boot Start Point

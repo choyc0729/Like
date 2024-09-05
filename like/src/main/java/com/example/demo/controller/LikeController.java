@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.servlet.http.HttpServletRequest;
-
+//사용자의 좋아요 및 싫어요 처리
 @Controller
 public class LikeController {
 
@@ -18,6 +18,7 @@ public class LikeController {
     private LikeService likeService;
 
     @GetMapping("/")
+    //index: get으로 현재 좋아요 상태 조회
     public String index(HttpServletRequest request, Model model) {
         Like like = likeService.getLike();
         String clientIp = getClientIp(request);
@@ -37,6 +38,7 @@ public class LikeController {
 
 
     @PostMapping("/like")
+    //like : post로 좋아요 추가
     public String like(HttpServletRequest request, Model model) {
         String clientIp = getClientIp(request);
         try {
@@ -49,6 +51,7 @@ public class LikeController {
     }
 
     @PostMapping("/unlike")
+    //unlike : delete like with post
     public String unlike(HttpServletRequest request, Model model) {
         String clientIp = getClientIp(request);
         try {
@@ -59,7 +62,7 @@ public class LikeController {
         }
         return "redirect:/";
     }
-
+    //get client`s ip address
     private String getClientIp(HttpServletRequest request) {
         String ipAddress = request.getHeader("X-Forwarded-For");
         if (ipAddress == null || ipAddress.isEmpty()) {

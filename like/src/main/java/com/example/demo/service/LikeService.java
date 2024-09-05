@@ -7,6 +7,8 @@ import com.example.demo.repository.LikeRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+//좋아요 및 싫어요 기능 구현
 @Service
 public class LikeService {
 

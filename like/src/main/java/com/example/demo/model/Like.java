@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "global_like")
+@Table(name = "global_like") //table name is global_like
 public class Like {
 
     @Id
