@@ -1,44 +1,47 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Like;
-import com.example.demo.model.LikeRecord;
-import com.example.demo.repository.*;
 import com.example.demo.service.LikeService;
+import com.example.demo.board.Board;
+import com.example.demo.board.BoardForm;
+import com.example.demo.board.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.servlet.http.HttpServletRequest;
-//사용자의 좋아요 및 싫어요 처리
+import jakarta.validation.Valid;
+
+import java.util.List;
+
 @Controller
-public class LikeController {
+public class MainController {
 
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private BoardService boardService;
+
+    // Like methods
     @GetMapping("/")
-    //index: get으로 현재 좋아요 상태 조회
     public String index(HttpServletRequest request, Model model) {
         Like like = likeService.getLike();
         String clientIp = getClientIp(request);
         boolean hasLiked = likeService.hasLiked(clientIp);
-
-        System.out.println("Client IP: " + clientIp);
-        System.out.println("Has liked: " + hasLiked);
-        System.out.println("Like count: " + (like != null ? like.getCount() : 0));
-
+        System.out.println("Ip address : "+clientIp);
+        List<Board> boardList = this.boardService.getList();
         model.addAttribute("hasLiked", hasLiked);
         model.addAttribute("like", like);
+        model.addAttribute("boardList", boardList);
 
         return "index";
     }
 
-
-
-
     @PostMapping("/like")
-    //like : post로 좋아요 추가
     public String like(HttpServletRequest request, Model model) {
         String clientIp = getClientIp(request);
         try {
@@ -51,7 +54,6 @@ public class LikeController {
     }
 
     @PostMapping("/unlike")
-    //unlike : delete like with post
     public String unlike(HttpServletRequest request, Model model) {
         String clientIp = getClientIp(request);
         try {
@@ -62,7 +64,35 @@ public class LikeController {
         }
         return "redirect:/";
     }
-    //get client`s ip address
+
+    // Board methods
+    @GetMapping("/board/detail/{id}")
+    public String detail(Model model, @PathVariable("id") Integer id) {
+        Board board = this.boardService.getBoard(id);
+        model.addAttribute("board", board);
+        return "board_detail";
+    }
+
+    @GetMapping("/board/create")
+    public String boardCreate(Model model) {
+        model.addAttribute("boardForm", new BoardForm());
+        return "board_form";
+    }
+
+    @PostMapping("/board/create")
+    public String boardCreate(@Valid BoardForm boardForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "board_form";
+        }
+        try {
+            this.boardService.create(boardForm.getSubject(), boardForm.getContent());
+        } catch (Exception e) {
+            bindingResult.reject("createFailed", "게시글 생성에 실패했습니다.");
+            return "board_form";
+        }
+        return "redirect:/";
+    }
+
     private String getClientIp(HttpServletRequest request) {
         String ipAddress = request.getHeader("X-Forwarded-For");
         if (ipAddress == null || ipAddress.isEmpty()) {
