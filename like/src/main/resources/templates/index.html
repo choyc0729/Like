@@ -1,30 +1,48 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Like Example</title>
+    <title>Like & Board Example</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Likes</h1>
-    <p>Current Likes: <span th:text="${like != null ? like.count : 0}">0</span></p>
+    <div class="container">
+        <!-- Like Section -->
+        <h1 class="my-4">Likes</h1>
+        <p>Current Likes: <span th:text="${like != null ? like.count : 0}">0</span></p>
 
-	<div th:if="${!hasLiked}">
-	    <form action="/like" method="post">
-	        <button type="submit">Like</button>
-	    </form>
-	</div>
+        <div class="mb-4">
+            <form th:action="@{/like}" method="post" th:if="${!hasLiked}">
+                <button type="submit" class="btn btn-success">Like</button>
+            </form>
+            <form th:action="@{/unlike}" method="post" th:if="${hasLiked}">
+                <button type="submit" class="btn btn-danger">Unlike</button>
+            </form>
+        </div>
 
-	<div th:if="${hasLiked}">
-	    <form action="/unlike" method="post">
-	        <button type="submit">Unlike</button>
-	    </form>
-	</div>
+        <!-- Board Actions -->
+        <h1 class="my-4">Board Actions</h1>
+        <a href="/board/create" class="btn btn-primary mb-4">질문 등록하기</a>
 
-
-    <div th:if="${error != null}">
-        <p style="color: red;" th:text="${error}"></p>
+        <!-- Board List Section -->
+        <h2 class="mb-4">게시물 목록</h2>
+        <div th:if="${boardList != null and !#lists.isEmpty(boardList)}">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>제목</th>
+                        <th>작성일시</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="board : ${boardList}">
+                        <td>
+                            <a th:href="@{|/board/detail/${board.id}|}" th:text="${board.subject}"></a>
+                        </td>
+                        <td th:text="${#temporals.format(board.createDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>
-
-<!--현재 좋아요 수 표시 및 버튼 제-->
-<!--like객체가 null이면 like버튼, like객체가 null이 아니면 unlike버-->
